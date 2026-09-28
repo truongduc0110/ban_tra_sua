@@ -1,0 +1,15 @@
+{
+  "name": "bubble-and-bloom",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "node server.mjs",
+    "build": "vite build",
+    "preview": "NODE_ENV=production node server.mjs"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "vite": "^7.1.7"
+  }
+}

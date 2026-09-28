@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#f7efe3" />
+    <meta name="description" content="Bubble & Bloom — game quản lý tiệm trà sữa 2D." />
+    <title>Bubble & Bloom — Tiệm trà nhỏ</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@500;600;700;800&family=Fredoka:wght@500;600;700&display=swap" rel="stylesheet" />
+  </head>
+  <body>
+    <main id="app">
+      <section id="start-screen" class="screen start-screen">
+        <img class="hero-art" src="/assets/tea-shop-counter-v2.png" alt="Tiệm trà sữa nhỏ giữa khu vườn" />
+        <div class="hero-shade"></div>
+        <div class="start-top"><span class="brand-mark">B<span>&</span>B</span><button class="sound-btn" data-sound aria-label="Bật hoặc tắt âm thanh">♪</button></div>
+        <div class="start-copy">
+          <p class="eyebrow"><span></span> TIỆM TRÀ NHỎ GIỮA VƯỜN</p>
+          <h1>Bubble<br /><em>&amp; Bloom</em></h1>
+          <p class="tagline">Tự tay nhập hàng. Pha từng ly thật ngon.<br />Xây nên tiệm trà sữa đáng yêu nhất thị trấn.</p>
+          <button id="start-btn" class="primary-btn">BẮT ĐẦU MỞ TIỆM <b>→</b></button>
+          <p class="tiny-note">Bật âm thanh để chơi vui hơn · Không cần tài khoản</p>
+        </div>
+      </section>
+
+      <section id="prep-screen" class="screen prep-screen hidden">
+        <div class="phone">
+          <header class="shop-bar">
+            <div class="bar-day"><span class="bar-icon">⚙</span><div><strong id="prep-day-label">Ngày 1</strong><small id="prep-status">Chuẩn bị</small></div></div>
+            <div class="bar-money"><small>Bubble &amp; Bloom</small><strong id="prep-cash">400k</strong></div>
+            <div class="bar-rating"><span id="prep-stars">★★★★★</span><small id="prep-rating">5,0 · 0 đánh giá</small></div>
+          </header>
+          <div class="awning" aria-hidden="true"></div>
+          <div class="prep-scroll">
+            <div class="shop-sign">Bubble &amp; Bloom <span>🌸</span></div>
+            <div class="chalkboard">
+              <h2>🧋 Menu hôm nay</h2>
+              <div class="chalk-grid">
+                <div><span>Trà sữa</span><b id="menu-milk-price">25k</b></div>
+                <div><span>Matcha</span><b id="menu-matcha-price">30k</b></div>
+              </div>
+              <p class="chalk-sub">Topping</p>
+              <div class="chalk-grid">
+                <div><span>Trân châu đen</span><b id="menu-black-price">+6k</b></div>
+                <div><span>Trân châu trắng</span><b id="menu-white-price">+5k</b></div>
+              </div>
+              <p class="chalk-foot"><span id="menu-size-price">Size L +7k</span> · <span id="menu-margin">Lãi gộp 19k–22,5k / ly</span></p>
+            </div>
+            <section class="prep-card">
+              <nav class="management-tabs" aria-label="Quản lý cửa hàng">
+                <button class="active" data-management-tab="stock"><i>📦</i>Kho</button>
+                <button data-management-tab="upgrades"><i>🛠️</i>Nâng cấp</button>
+                <button data-management-tab="prices"><i>🏷️</i>Giá bán</button>
+                <button data-management-tab="reviews"><i>⭐</i>Đánh giá</button>
+                <button data-management-tab="summary"><i>📊</i>Tổng kết</button>
+              </nav>
+              <div class="prep-card-body">
+                <div class="forecast-pill">👥 Khách dự kiến <b id="expected-guests">11–17</b> · 🕚 11:00–22:00</div>
+                <div class="capital-box">
+                  <div><span>Vốn nhập hàng hôm nay</span><small>Mức tối đa bạn muốn chi để nhập nguyên liệu.</small></div>
+                  <label><input id="capital-input" type="number" min="0" step="10" value="120" /><b>k</b></label>
+                </div>
+                <div class="budget-meter"><div><span>Dự chi <strong id="planned-cost">0k</strong></span><small id="budget-left">Còn 120k</small></div><i><b id="budget-bar"></b></i></div>
+                <div id="stock-category-tabs" class="subtabs stock-subtabs"><button class="active" data-stock-category="tea">🧋 Trà &amp; sữa</button><button data-stock-category="topping">⚪ Topping</button><button data-stock-category="cup">🥤 Ly</button></div>
+                <div id="prep-inventory" class="prep-inventory"></div>
+                <div id="missing-note" class="missing-note">Hãy nhập đủ nguyên liệu trước khi mở cửa.</div>
+                <button id="stock-btn" class="stock-btn"><span>Nhập kho</span><b id="stock-cost">0k</b></button>
+                <div id="management-panel" class="management-panel hidden"></div>
+              </div>
+            </section>
+          </div>
+          <footer class="phone-footer">
+            <button id="open-shop-btn" class="open-shop-btn" disabled><span id="open-shop-label">Mở cửa ngày 1</span></button>
+          </footer>
+        </div>
+      </section>
+
+      <section id="game-screen" class="screen game-screen hidden">
+        <div class="phone">
+          <header class="shop-bar hud">
+            <div class="bar-day"><button id="help-btn" class="bar-icon" aria-label="Hướng dẫn">?</button><div><strong id="game-day-label">Ngày 1</strong><small><span class="clock">🕚</span> <span id="game-phase-label">11:00</span></small></div></div>
+            <div class="bar-money"><small>Doanh thu</small><strong id="money">0k</strong></div>
+            <div class="bar-rating"><span id="stars">★★★★★</span><small><b id="rating">5,0</b> · còn <b id="timer">10:00</b></small></div>
+            <button id="close-shop-btn" class="close-shop-btn" aria-label="Đóng cửa">×</button>
+          </header>
+          <div class="awning" aria-hidden="true"></div>
+          <div class="sales-body">
+            <section id="order-card" class="customer-zone">
+              <div class="customer-figure">
+                <div id="customer-avatar" class="customer-sprite"></div>
+                <span id="order-number" class="order-no">#001</span>
+              </div>
+              <div class="speech">
+                <div class="speech-head">
+                  <div id="order-cup" class="order-cup"><img class="order-cup-art" src="/assets/sprites/milk-tea-cup.png" alt="" /></div>
+                  <div><strong id="customer-name">Chị Lan</strong> <span id="quiz-badge" class="quiz-badge">? Chờ câu hỏi</span><p id="customer-mood">Em ơi, cho chị 1 ly trà sữa size M nhé!</p></div>
+                </div>
+                <h2 id="drink-name">Trà sữa đường đen</h2>
+                <div id="recipe-list" class="recipe-list"></div>
+                <div class="patience"><span>Kiên nhẫn</span><i><b id="patience-bar"></b></i><b id="patience-text">100%</b></div>
+              </div>
+              <div id="queue-list" class="queue-list"></div>
+            </section>
+            <div class="build-summary">
+              <strong id="making-label">Chọn cỡ ly để bắt đầu</strong>
+              <div id="step-dots" class="step-dots"></div>
+              <button id="clear-btn" class="clear-btn">Làm lại</button>
+            </div>
+            <div id="scene-wrap"><canvas id="game-canvas"></canvas></div>
+            <div id="stock-strip" class="stock-strip"></div>
+            <section class="station-panel">
+              <div id="steps" class="steps"></div>
+              <div id="options" class="options"></div>
+              <button id="serve-btn" class="serve-btn" disabled><span>Giao nước</span><b>→</b></button>
+            </section>
+          </div>
+          <div id="combo" class="combo-badge hidden">HOÀN HẢO <b>x2</b></div>
+          <div id="toast" class="toast">Tuyệt lắm!</div>
+        </div>
+      </section>
+
+      <section id="result-screen" class="screen result-screen hidden">
+        <div class="result-backdrop"></div>
+        <div class="result-card">
+          <p class="eyebrow center"><span></span> ĐÃ ĐÓNG CỬA <span></span></p>
+          <div class="result-flower">✿</div>
+          <h1>Một ngày thật chăm chỉ!</h1>
+          <p class="result-sub">Tiệm đã nghỉ. Cùng xem kết quả kinh doanh hôm nay nhé.</p>
+          <div class="result-stars" id="result-stars">★★★★★</div>
+          <div class="result-grid">
+            <div><small>DOANH THU</small><strong id="result-money">0k</strong></div>
+            <div><small>SỐ LY ĐÃ BÁN</small><strong id="result-served">0</strong></div>
+            <div><small>ĐƠN HOÀN HẢO</small><strong id="result-perfect">0</strong></div>
+            <div><small>ĐÁNH GIÁ</small><strong id="result-rating">5,0</strong></div>
+            <div><small>CÂU TIẾNG ANH ĐÚNG</small><strong id="result-tips">0/0</strong></div>
+            <div><small>TIỀN LỜI MẤT DO SAI</small><strong id="result-conversations">0k</strong></div>
+            <div><small>TIỀN HÀNG &amp; THUÊ</small><strong id="result-cost">0k</strong></div>
+            <div><small>LÃI RÒNG</small><strong id="result-profit">0k</strong></div>
+          </div>
+          <div class="review"><div class="review-face">♥</div><p><strong id="review-name">Liam left a review</strong><span id="review-text">“Such a lovely little tea shop!”</span></p></div>
+          <button id="again-btn" class="primary-btn dark">CHUẨN BỊ NGÀY TIẾP THEO <b>→</b></button>
+        </div>
+      </section>
+
+      <div id="tutorial" class="modal hidden">
+        <div class="tutorial-card">
+          <button id="close-tutorial" class="modal-close">×</button>
+          <p class="eyebrow center"><span></span> HƯỚNG DẪN NHANH <span></span></p>
+          <h2>Pha đúng ly khách gọi</h2>
+          <div class="guide-grid">
+            <div><b>1</b><span>Trả lời câu hỏi</span><small>Mỗi khách hỏi 1 câu tiếng Anh. Đúng thì ly có lời, sai thì chỉ thu vốn.</small></div>
+            <div><b>2</b><span>Pha từng bước</span><small>Chạm vào trạm trên quầy rồi chọn nguyên liệu.</small></div>
+            <div><b>3</b><span>Giao thật nhanh</span><small>Pha đúng và nhanh sẽ nhận nhiều tiền hơn.</small></div>
+          </div>
+          <button id="got-it-btn" class="primary-btn">BẮT ĐẦU PHA <b>→</b></button>
+        </div>
+      </div>
+
+      <div id="close-modal" class="modal hidden">
+        <div class="tutorial-card close-card">
+          <div class="close-sign">ĐÓNG CỬA</div>
+          <h2>Đóng cửa sớm hôm nay?</h2>
+          <p>Khách còn lại sẽ ra về và tiệm chuyển sang tổng kết doanh thu trong ngày.</p>
+          <div class="close-actions"><button id="keep-open-btn" class="secondary-btn">BÁN TIẾP</button><button id="confirm-close-btn" class="primary-btn dark">ĐÓNG CỬA &amp; TỔNG KẾT</button></div>
+        </div>
+      </div>
+
+      <div id="english-modal" class="modal hidden">
+        <section class="dialogue-card">
+          <div class="dialogue-kicker"><span>EN</span> <b>CÂU HỎI TIẾNG ANH CỦA KHÁCH</b></div>
+          <div class="dialogue-person">
+            <div id="dialogue-avatar" class="dialogue-avatar"></div>
+            <div><strong id="dialogue-name">Chị Lan</strong><small>Đúng: ly này có lời · Sai: ly này chỉ thu vốn</small></div>
+          </div>
+          <div id="dialogue-line" class="dialogue-bubble">Từ “wander” nghĩa là gì?</div>
+          <div id="quiz-form">
+            <div id="quiz-options" class="quiz-options"></div>
+          </div>
+          <div id="dialogue-result" class="dialogue-result hidden">
+            <div id="dialogue-score" class="score-ring">✓<small>ĐÚNG</small></div>
+            <div class="score-copy">
+              <strong id="dialogue-verdict">Chính xác!</strong>
+              <p id="dialogue-feedback"></p>
+              <div><span>Đáp án</span><em id="dialogue-correction"></em></div>
+              <b id="dialogue-tip"></b>
+            </div>
+            <button id="continue-dialogue-btn" class="primary-btn dark"><span>BẮT ĐẦU PHA CHẾ</span> <b>→</b></button>
+          </div>
+        </section>
+      </div>
+    </main>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
